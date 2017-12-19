@@ -78,23 +78,26 @@ namespace Test_MXL
 			
 			using (FileStream originalFileStream = fileToDecompress.OpenRead())
 			{
-				string currentFileName = fileToDecompress.FullName;
-				string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
-			
-				using (FileStream decompressedFileStream = File.Create(newFileName))
-				{
+				//string currentFileName = fileToDecompress.FullName;
+				//string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
+				//
+				//using (FileStream decompressedFileStream = File.Create(newFileName))
+				//{
 					//originalFileStream.Position = 2;
-					using (DeflateStream decompressionStream = new DeflateStream(originalFileStream, CompressionMode.Decompress))
+					using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
 					{
-						var sr = new StreamReader( decompressionStream, Encoding.UTF8 );
+						StreamReader sr = new StreamReader( decompressionStream, Encoding.UTF8 );
 
 						Console.WriteLine("Name: {0}", fileToDecompress.Name);
-						Console.WriteLine("BaseStream: {0}", decompressionStream.BaseStream);
-						byte[] decompressedBuffer = ReadAllBytesFromStream( decompressionStream );
-						string plainText = Encoding.UTF8.GetString(decompressedBuffer);
-						Console.WriteLine("plainText: {0}", plainText);
-						//Encoding.UTF8.GetString(decompressionStream);
 						Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
+
+						
+						//Console.WriteLine("BaseStream: {0}", decompressionStream.BaseStream);
+						//byte[] decompressedBuffer = ReadAllBytesFromStream( decompressionStream );
+						//string plainText = Encoding.UTF8.GetString(decompressedBuffer);
+						//Console.WriteLine("plainText: {0}", plainText);
+						////Encoding.UTF8.GetString(decompressionStream);
+						//Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
 					}
 
 					//using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress, false ))
@@ -105,7 +108,7 @@ namespace Test_MXL
 					//	Console.WriteLine("BaseStream: {0}", decompressionStream.BaseStream);
 					//	Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
 					//}
-				}
+				//}
 			}
 		}
 
