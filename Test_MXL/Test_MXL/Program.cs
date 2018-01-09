@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Xml;
 using System.IO;
 using System.IO.Compression;
+using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,24 +17,31 @@ namespace Test_MXL
 			{
 				string txtName = "Test_do.txt";
 				string txtPath = "F:\\workspace_suny\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
-				string decompressName = "new.gz";
-				string decompressPath = "F:\\workspace_suny\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+				//string decompressName = "new.gz";
+				string decompressName = "Dichterliebe01.mxl";
+				//string decompressPath = "F:\\workspace_suny\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+				string decompressPath = "D:\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+				//string zipName = "testZipFile.zip";
+				//string zipName = "Dichterliebe01.mxl";
+				string zipName = "89280-Twinkle_Twinkle_Little_Star.mxl";
 
 				//string fullPath = "F:\\workspace_suny\\TestProject\\Test_MXL\\Test_MXL\\Resources\\Test_do.txt";
 				//string path = Path.Combine(Environment.CurrentDirectory, @"Resources\", "Test_do.txt");
 
 				// 1.
 				// Starting file is 26,747 bytes.
-				string anyString = File.ReadAllText(txtPath + txtName);
-				Console.WriteLine("anyString: {0}", anyString);
+				//string anyString = File.ReadAllText(txtPath + txtName);
+				//Console.WriteLine("anyString: {0}", anyString);
 
 				// 2.
 				// Output file is 7,388 bytes.
-				CompressStringToFile(decompressPath + decompressName, anyString);
+				//CompressStringToFile(decompressPath + decompressName, anyString);
 
 				//string decompressName = "89280-Twinkle_Twinkle_Little_Star.mxl";
 				
-				DecompressStringFromFile( decompressPath + decompressName );
+				//DecompressStringFromFile( decompressPath + decompressName );
+
+				DecompressToPath( decompressPath + "zipFolder", decompressPath + zipName, decompressPath + "extractFolder" );
 
 				//loadXML(decompressPath + decompressName);
 			}
@@ -83,14 +90,14 @@ namespace Test_MXL
 				//
 				//using (FileStream decompressedFileStream = File.Create(newFileName))
 				//{
-					//originalFileStream.Position = 2;
-					using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+					originalFileStream.Position = 2;
+					//using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+					using (DeflateStream decompressionStream = new DeflateStream(originalFileStream, CompressionMode.Decompress))
 					{
 						StreamReader sr = new StreamReader( decompressionStream, Encoding.UTF8 );
 
 						Console.WriteLine("Name: {0}", fileToDecompress.Name);
 						Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
-
 						
 						//Console.WriteLine("BaseStream: {0}", decompressionStream.BaseStream);
 						//byte[] decompressedBuffer = ReadAllBytesFromStream( decompressionStream );
@@ -135,6 +142,38 @@ namespace Test_MXL
 			ret.Flush();
 			ret.Close();
 			return ret.ToArray();
+		}
+
+		private static void DecompressToPath( string _targetPath, string _zipPath, string _extractPath )
+		{
+            //ZipFile.CreateFromDirectory(_targetPath, _zipPath);
+			
+            //ZipFile.ExtractToDirectory(_zipPath, _extractPath);
+
+			//string zipPath = @"c:\example\start.zip";
+            //string extractPath = @"c:\example\extract";
+
+            using (ZipArchive archive = ZipFile.OpenRead(_zipPath))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+					if( "META-INF/container.xml" == entry.FullName )
+					{
+						Stream fileStream = entry.Open();
+						
+						StreamReader sr = new StreamReader( fileStream, Encoding.UTF8 );
+						Console.WriteLine("Name: {0}", entry.FullName);
+						Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
+					}
+
+                    //if (entry.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+                    //{
+					//	//FileStream
+					//
+                    //    //entry.ExtractToFile(Path.Combine(_extractPath, entry.FullName));
+                    //}
+                }
+            } 
 		}
 	}
 }
