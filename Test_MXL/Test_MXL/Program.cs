@@ -15,12 +15,15 @@ namespace Test_MXL
 		{
 			try
 			{
-				string txtName = "Test_do.txt";
 				string txtPath = "F:\\workspace_suny\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+				string decompressPath = "F:\\workspace_suny\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+				//string decompressPath = "D:\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+
+				string txtName = "Test_do.txt";
+				
 				//string decompressName = "new.gz";
 				string decompressName = "Dichterliebe01.mxl";
-				//string decompressPath = "F:\\workspace_suny\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
-				string decompressPath = "D:\\workspace_test\\Test_MXL\\Test_MXL\\Resources\\";
+				
 				//string zipName = "testZipFile.zip";
 				//string zipName = "Dichterliebe01.mxl";
 				string zipName = "89280-Twinkle_Twinkle_Little_Star.mxl";
@@ -41,7 +44,8 @@ namespace Test_MXL
 				
 				//DecompressStringFromFile( decompressPath + decompressName );
 
-				DecompressToPath( decompressPath + "zipFolder", decompressPath + zipName, decompressPath + "extractFolder" );
+				string noteData = DecompressToPath( decompressPath + "zipFolder", decompressPath + zipName, decompressPath + "extractFolder" );
+
 
 				//loadXML(decompressPath + decompressName);
 			}
@@ -144,36 +148,147 @@ namespace Test_MXL
 			return ret.ToArray();
 		}
 
-		private static void DecompressToPath( string _targetPath, string _zipPath, string _extractPath )
+		private static string DecompressToPath( string _targetPath, string _zipPath, string _extractPath )
 		{
-            //ZipFile.CreateFromDirectory(_targetPath, _zipPath);
-			
-            //ZipFile.ExtractToDirectory(_zipPath, _extractPath);
-
-			//string zipPath = @"c:\example\start.zip";
-            //string extractPath = @"c:\example\extract";
-
-            using (ZipArchive archive = ZipFile.OpenRead(_zipPath))
+			using (ZipArchive archive = ZipFile.OpenRead(_zipPath))
             {
-                foreach (ZipArchiveEntry entry in archive.Entries)
+				string notedataName = null;
+
+				foreach (ZipArchiveEntry entry in archive.Entries)
                 {
 					if( "META-INF/container.xml" == entry.FullName )
 					{
 						Stream fileStream = entry.Open();
-						
 						StreamReader sr = new StreamReader( fileStream, Encoding.UTF8 );
-						Console.WriteLine("Name: {0}", entry.FullName);
-						Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
-					}
 
-                    //if (entry.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
-                    //{
-					//	//FileStream
-					//
-                    //    //entry.ExtractToFile(Path.Combine(_extractPath, entry.FullName));
-                    //}
+						string containerData = sr.ReadToEnd();
+
+						Console.WriteLine("Name: {0}", entry.FullName);
+						Console.WriteLine("ReadToEnd: {0}", containerData);
+
+						using (XmlReader reader = XmlReader.Create(new StringReader(containerData)))
+						{
+							
+							XmlWriterSettings ws = new XmlWriterSettings();
+							ws.Indent = true;
+							// Parse the file and display each of the nodes.
+							while (reader.Read())
+							{
+								switch (reader.NodeType)
+								{
+									case XmlNodeType.Element:
+										Console.WriteLine("Element reader.Name: {0}", reader.Name);
+										Console.WriteLine("Element reader.Value: {0}", reader.Value);
+										Console.WriteLine("Element reader.AttributeCount: {0}", reader.AttributeCount);
+										if( true == reader.MoveToFirstAttribute() )
+										{
+											Console.WriteLine("Element reader.FirstAttributeName: {0}", reader.Name);
+											Console.WriteLine("Element reader.FirstAttributeValue: {0}", reader.Value);
+											notedataName = reader.Value;
+										}
+										break;
+									case XmlNodeType.Text:
+										Console.WriteLine("Text reader.Value: {0}", reader.Value);
+										break;
+									case XmlNodeType.XmlDeclaration:
+									case XmlNodeType.ProcessingInstruction:
+										Console.WriteLine("XmlDeclaration reader.Name: {0}", reader.Name);
+										Console.WriteLine("XmlDeclaration reader.Value: {0}", reader.Value);
+										break;
+									case XmlNodeType.Comment:
+										Console.WriteLine("Comment reader.Value: {0}", reader.Value);
+										break;
+									case XmlNodeType.EndElement:
+										Console.WriteLine("EndElement");
+										break;
+								}
+							}
+
+							reader.Close();
+						}
+
+						//Console.WriteLine("{0,-15}{1,-15}{2,-15}{3,-15}", "Depth", "Name", "Type", "ReadString");
+						//Console.WriteLine("{0,-15}{0,-15}{0,-15}{0,-15}", "====");
+						//
+						//XmlReader xmlReader = XmlReader.Create( new StringReader( containerData ) );
+						//while( true == xmlReader.Read() )
+						//{
+						//	Console.WriteLine("{0,-15}{1,-15}{2,-15}{3,-15}",
+						//	xmlReader.Depth, xmlReader.Name, xmlReader.NodeType.ToString(), xmlReader.Value );
+						//}
+						//
+						//xmlReader.Close();
+
+						//XmlDocument xml = new XmlDocument();
+						//xml.LoadXml(containerData);
+						//XmlNodeList xnList = xml.GetElementsByTagName("container"); //접근할 노드
+						//
+						//Console.WriteLine("XmlCount: {0}", xnList.Count);
+						//foreach (XmlNode xn in xnList)
+						//{
+						//	Console.WriteLine("XmlNode: {0}", xn["rootfiles"].InnerXml);
+						//	Console.WriteLine("XmlNode: {0}", xn["rootfiles"]["rootfile"].InnerText);
+						//	//string lng = xn["point"]["y"].InnerText;
+						//}
+					}
                 }
-            } 
+
+				foreach (ZipArchiveEntry entry in archive.Entries)
+				{
+					if (notedataName == entry.FullName)
+					{
+						Stream fileStream = entry.Open();
+						StreamReader sr = new StreamReader(fileStream, Encoding.UTF8);
+
+						string noteData = sr.ReadToEnd();
+
+						Console.WriteLine("===================================================");
+						Console.WriteLine("Name: {0}", entry.FullName);
+						//Console.WriteLine("ReadToEnd: {0}", noteData);
+
+						//XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+						using (XmlReader reader = XmlReader.Create(new StringReader(noteData)))
+						{
+							XmlWriterSettings ws = new XmlWriterSettings();
+							ws.Indent = true;
+							// Parse the file and display each of the nodes.
+							while (reader.Read())
+							{
+								switch (reader.NodeType)
+								{
+									case XmlNodeType.Element:
+										Console.WriteLine("Element reader.Name: {0}", reader.Name);
+										Console.WriteLine("Element reader.Value: {0}", reader.Value);
+										Console.WriteLine("Element reader.AttributeCount: {0}", reader.AttributeCount);
+										if (true == reader.MoveToFirstAttribute())
+										{
+											Console.WriteLine("Element reader.FirstAttributeName: {0}", reader.Name);
+											Console.WriteLine("Element reader.FirstAttributeValue: {0}", reader.Value);
+											notedataName = reader.Value;
+										}
+										break;
+									case XmlNodeType.Text:
+										Console.WriteLine("Text reader.Value: {0}", reader.Value);
+										break;
+									case XmlNodeType.XmlDeclaration:
+									case XmlNodeType.ProcessingInstruction:
+										Console.WriteLine("XmlDeclaration reader.Name: {0}", reader.Name);
+										Console.WriteLine("XmlDeclaration reader.Value: {0}", reader.Value);
+										break;
+									case XmlNodeType.Comment:
+										Console.WriteLine("Comment reader.Value: {0}", reader.Value);
+										break;
+									case XmlNodeType.EndElement:
+										Console.WriteLine("EndElement");
+										break;
+								}
+							}
+							reader.Close();
+						}
+					}
+				}
+			}
+			return null;
 		}
 	}
 }
