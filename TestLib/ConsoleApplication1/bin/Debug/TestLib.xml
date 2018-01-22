@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TestLib</name>
+    </assembly>
+    <members>
+        <member name="M:TestLib.Class1.Hello">
+            <summary>
+            Hello1!!!!!!!!!!!!!!!!!!
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

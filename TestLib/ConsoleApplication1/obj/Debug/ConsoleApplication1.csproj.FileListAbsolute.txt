@@ -1,0 +1,9 @@
+D:\workspace_test\TestLib\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+D:\workspace_test\TestLib\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+D:\workspace_test\TestLib\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+D:\workspace_test\TestLib\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+D:\workspace_test\TestLib\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
+D:\workspace_test\TestLib\ConsoleApplication1\bin\Debug\TestLib.dll
+D:\workspace_test\TestLib\ConsoleApplication1\bin\Debug\TestLib.pdb
+D:\workspace_test\TestLib\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache
+D:\workspace_test\TestLib\ConsoleApplication1\bin\Debug\TestLib.xml

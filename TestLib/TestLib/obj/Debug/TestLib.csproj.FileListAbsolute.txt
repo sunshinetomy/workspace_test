@@ -1,0 +1,6 @@
+D:\workspace_test\TestLib\TestLib\bin\Debug\TestLib.dll
+D:\workspace_test\TestLib\TestLib\bin\Debug\TestLib.pdb
+D:\workspace_test\TestLib\TestLib\obj\Debug\TestLib.dll
+D:\workspace_test\TestLib\TestLib\obj\Debug\TestLib.pdb
+D:\workspace_test\TestLib\TestLib\bin\Debug\TestLib.XML
+D:\workspace_test\TestLib\TestLib\obj\Debug\TestLib.csprojResolveAssemblyReference.cache
