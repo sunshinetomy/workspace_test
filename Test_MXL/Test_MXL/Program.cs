@@ -20,7 +20,22 @@ namespace Test_MXL
 				string resourcePath = projectPath + "Resources\\";
 				string musicXmlName = "Dichterliebe01.mxl";
 
-				Program.ReadMusicXml( resourcePath + musicXmlName );
+				MusicXml.Domain.Score score = MusicXml.MusicXmlParser.GetScore( musicXmlName );
+				for(int index = 0 ; index < score.Parts.Count ; ++index )
+				{
+					Console.WriteLine( "Name {0}", score.Parts[index].Name );
+				}
+
+				MusicXml.Domain.Part mainPart = score.Parts[0];
+				for( int index = 0 ; index < mainPart.Measures.Count ; ++index )
+				{
+					List<MusicXml.Domain.MeasureElement> measureElement = mainPart.Measures[index].MeasureElements;
+
+
+					//Console.WriteLine( "Name {0}", mainPart.Measures[index].MeasureElements );
+				}
+
+				//Program.ReadMusicXml( resourcePath + musicXmlName );
 
 				string txtName = "Test_do.txt";
 				
@@ -306,8 +321,6 @@ namespace Test_MXL
 
 		private static void ReadMusicXmlDocument( string _path )
 		{
-			//XmlDocument xml = new XmlDocument();
-			//xml.LoadXml(containerData);
 			//XmlNodeList xnList = xml.GetElementsByTagName("container"); //접근할 노드
 			//
 			//Console.WriteLine("XmlCount: {0}", xnList.Count);
@@ -319,7 +332,7 @@ namespace Test_MXL
 			//}
 		}
 
-		private static string ReadMusicXml( string _path )
+		public static string ReadMusicXml( string _path )
 		{
 			using (ZipArchive archive = ZipFile.OpenRead(_path))
             {
@@ -393,49 +406,52 @@ namespace Test_MXL
 						Console.WriteLine("Name: {0}", entry.FullName);
 						//Console.WriteLine("ReadToEnd: {0}", noteData);
 
-						XmlReaderSettings settings = new XmlReaderSettings();
-						settings.DtdProcessing = DtdProcessing.Parse;
-						using (XmlReader reader = XmlReader.Create(new StringReader(noteData), settings))
-						{
-							XmlWriterSettings ws = new XmlWriterSettings();
-							ws.Indent = true;
-							// Parse the file and display each of the nodes.
-							while (reader.Read())
-							{
-								switch (reader.NodeType)
-								{
-									case XmlNodeType.Element:
-										Console.WriteLine("Element reader.Name: {0}", reader.Name);
-										Console.WriteLine("Element reader.Value: {0}", reader.Value);
-										Console.WriteLine("Element reader.AttributeCount: {0}", reader.AttributeCount);
-										if (true == reader.MoveToFirstAttribute())
-										{
-											Console.WriteLine("Element reader.FirstAttributeName: {0}", reader.Name);
-											Console.WriteLine("Element reader.FirstAttributeValue: {0}", reader.Value);
-											notedataName = reader.Value;
-										}
-										break;
-									case XmlNodeType.Text:
-										Console.WriteLine("Text reader.Value: {0}", reader.Value);
-										break;
-									case XmlNodeType.XmlDeclaration:
-									case XmlNodeType.ProcessingInstruction:
-										Console.WriteLine("XmlDeclaration reader.Name: {0}", reader.Name);
-										Console.WriteLine("XmlDeclaration reader.Value: {0}", reader.Value);
-										break;
-									case XmlNodeType.Comment:
-										Console.WriteLine("Comment reader.Value: {0}", reader.Value);
-										break;
-									case XmlNodeType.EndElement:
-										Console.WriteLine("EndElement");
-										break;
-								}
-							}
-							reader.Close();
-						}
+						//XmlReaderSettings settings = new XmlReaderSettings();
+						//settings.DtdProcessing = DtdProcessing.Parse;
+						//using (XmlReader reader = XmlReader.Create(new StringReader(noteData), settings))
+						//{
+						//	XmlWriterSettings ws = new XmlWriterSettings();
+						//	ws.Indent = true;
+						//	// Parse the file and display each of the nodes.
+						//	while (reader.Read())
+						//	{
+						//		switch (reader.NodeType)
+						//		{
+						//			case XmlNodeType.Element:
+						//				Console.WriteLine("Element reader.Name: {0}", reader.Name);
+						//				Console.WriteLine("Element reader.Value: {0}", reader.Value);
+						//				Console.WriteLine("Element reader.AttributeCount: {0}", reader.AttributeCount);
+						//				if (true == reader.MoveToFirstAttribute())
+						//				{
+						//					Console.WriteLine("Element reader.FirstAttributeName: {0}", reader.Name);
+						//					Console.WriteLine("Element reader.FirstAttributeValue: {0}", reader.Value);
+						//					notedataName = reader.Value;
+						//				}
+						//				break;
+						//			case XmlNodeType.Text:
+						//				Console.WriteLine("Text reader.Value: {0}", reader.Value);
+						//				break;
+						//			case XmlNodeType.XmlDeclaration:
+						//			case XmlNodeType.ProcessingInstruction:
+						//				Console.WriteLine("XmlDeclaration reader.Name: {0}", reader.Name);
+						//				Console.WriteLine("XmlDeclaration reader.Value: {0}", reader.Value);
+						//				break;
+						//			case XmlNodeType.Comment:
+						//				Console.WriteLine("Comment reader.Value: {0}", reader.Value);
+						//				break;
+						//			case XmlNodeType.EndElement:
+						//				Console.WriteLine("EndElement");
+						//				break;
+						//		}
+						//	}
+						//	reader.Close();
+						//}
+
+						return noteData;
 					}
 				}
 			}
+
 			return null;
 		}
 	}

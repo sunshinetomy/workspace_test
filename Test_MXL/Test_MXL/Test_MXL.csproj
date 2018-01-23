@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,6 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Backup.cs" />
+    <Compile Include="Domain\Clef.cs" />
+    <Compile Include="Domain\Encoding.cs" />
+    <Compile Include="Domain\Forward.cs" />
+    <Compile Include="Domain\Identification.cs" />
+    <Compile Include="Domain\Key.cs" />
+    <Compile Include="Domain\Lyric.cs" />
+    <Compile Include="Domain\Measure.cs" />
+    <Compile Include="Domain\MeasureAttributes.cs" />
+    <Compile Include="Domain\MeasureElement.cs" />
+    <Compile Include="Domain\Note.cs" />
+    <Compile Include="Domain\Part.cs" />
+    <Compile Include="Domain\Pitch.cs" />
+    <Compile Include="Domain\Score.cs" />
+    <Compile Include="Domain\Time.cs" />
+    <Compile Include="MusicXmlParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
