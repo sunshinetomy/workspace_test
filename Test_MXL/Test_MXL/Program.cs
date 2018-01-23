@@ -36,9 +36,13 @@ namespace Test_MXL
 					for( int noteIndex = 0 ; noteIndex < measureElementList.Count ; ++noteIndex )
 					{
 						MeasureElement measureElement = measureElementList[noteIndex];
-						
+
+						/// <chord/> 화음
+						/// <staff/> 메인 반주
+						/// <rest/> 쉼
+
 						try
-						{
+							{
 							switch (measureElement.Type)
 							{
 								case MeasureElementType.Note:
@@ -64,9 +68,6 @@ namespace Test_MXL
 							Console.WriteLine( "index {0}", index );
 							Console.WriteLine( "noteIndex {0}", noteIndex );
 						}
-
-						
-						
 					}
 				}
 
