@@ -5,6 +5,7 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MusicXml.Domain;
 
 namespace Test_MXL
 {
@@ -18,21 +19,55 @@ namespace Test_MXL
 
 				string projectPath = Directory.GetCurrentDirectory() + "\\..\\..\\";
 				string resourcePath = projectPath + "Resources\\";
-				string musicXmlName = "Dichterliebe01.mxl";
+				//string musicXmlName = "Dichterliebe01.mxl";
+				//string musicXmlName = "89280-Twinkle_Twinkle_Little_Star.mxl";
+				string musicXmlName = "3375816-Twinkle_Twinkle_little_star.mxl";
 
-				MusicXml.Domain.Score score = MusicXml.MusicXmlParser.GetScore( musicXmlName );
+				Score score = MusicXml.MusicXmlParser.GetScore( musicXmlName );
 				for(int index = 0 ; index < score.Parts.Count ; ++index )
 				{
 					Console.WriteLine( "Name {0}", score.Parts[index].Name );
 				}
 
-				MusicXml.Domain.Part mainPart = score.Parts[0];
+				Part mainPart = score.Parts[0];
 				for( int index = 0 ; index < mainPart.Measures.Count ; ++index )
 				{
-					List<MusicXml.Domain.MeasureElement> measureElement = mainPart.Measures[index].MeasureElements;
+					List<MeasureElement> measureElementList = mainPart.Measures[index].MeasureElements; 
+					for( int noteIndex = 0 ; noteIndex < measureElementList.Count ; ++noteIndex )
+					{
+						MeasureElement measureElement = measureElementList[noteIndex];
+						
+						try
+						{
+							switch (measureElement.Type)
+							{
+								case MeasureElementType.Note:
+									Note note = measureElement.Element as Note;
+									Console.WriteLine("Note Octave {0}", note.Pitch.Octave);
+									Console.WriteLine("Note Step {0}", note.Pitch.Step);
+									break;
 
+								case MeasureElementType.Backup:
+									Backup backup = measureElement.Element as Backup;
+									Console.WriteLine("Backup Duration {0}", backup.Duration);
+									break;
 
-					//Console.WriteLine( "Name {0}", mainPart.Measures[index].MeasureElements );
+								case MeasureElementType.Forward:
+									Forward forward = measureElement.Element as Forward;
+									Console.WriteLine("Forward Duration {0}", forward.Duration);
+									break;
+							}
+						}
+						catch( Exception _e )
+						{
+							Console.WriteLine( "exception {0}", _e );
+							Console.WriteLine( "index {0}", index );
+							Console.WriteLine( "noteIndex {0}", noteIndex );
+						}
+
+						
+						
+					}
 				}
 
 				//Program.ReadMusicXml( resourcePath + musicXmlName );
@@ -126,7 +161,7 @@ namespace Test_MXL
 					//using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
 					using (DeflateStream decompressionStream = new DeflateStream(originalFileStream, CompressionMode.Decompress))
 					{
-						StreamReader sr = new StreamReader( decompressionStream, Encoding.UTF8 );
+						StreamReader sr = new StreamReader( decompressionStream, System.Text.Encoding.UTF8 );
 
 						Console.WriteLine("Name: {0}", fileToDecompress.Name);
 						Console.WriteLine("ReadToEnd: {0}", sr.ReadToEnd());
@@ -187,7 +222,7 @@ namespace Test_MXL
 					if( "META-INF/container.xml" == entry.FullName )
 					{
 						Stream fileStream = entry.Open();
-						StreamReader sr = new StreamReader( fileStream, Encoding.UTF8 );
+						StreamReader sr = new StreamReader( fileStream, System.Text.Encoding.UTF8 );
 
 						string containerData = sr.ReadToEnd();
 
@@ -266,7 +301,7 @@ namespace Test_MXL
 					if (notedataName == entry.FullName)
 					{
 						Stream fileStream = entry.Open();
-						StreamReader sr = new StreamReader(fileStream, Encoding.UTF8);
+						StreamReader sr = new StreamReader(fileStream, System.Text.Encoding.UTF8);
 
 						string noteData = sr.ReadToEnd();
 
@@ -343,7 +378,7 @@ namespace Test_MXL
 					if( "META-INF/container.xml" == entry.FullName )
 					{
 						Stream fileStream = entry.Open();
-						StreamReader sr = new StreamReader( fileStream, Encoding.UTF8 );
+						StreamReader sr = new StreamReader( fileStream, System.Text.Encoding.UTF8 );
 
 						string containerData = sr.ReadToEnd();
 
@@ -398,7 +433,7 @@ namespace Test_MXL
 					if (notedataName == entry.FullName)
 					{
 						Stream fileStream = entry.Open();
-						StreamReader sr = new StreamReader(fileStream, Encoding.UTF8);
+						StreamReader sr = new StreamReader(fileStream, System.Text.Encoding.UTF8);
 
 						string noteData = sr.ReadToEnd();
 
