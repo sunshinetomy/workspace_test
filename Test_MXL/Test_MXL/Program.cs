@@ -40,6 +40,8 @@ namespace Test_MXL
 						/// <chord/> 화음
 						/// <staff/> 메인 반주
 						/// <rest/> 쉼
+						/// ? 잇단음표
+						/// ? 이음줄
 
 						try
 							{
